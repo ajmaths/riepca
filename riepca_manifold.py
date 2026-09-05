@@ -1,9 +1,8 @@
 # %% [markdown]
-# # Readable RiePCA on a Riemannian manifold
+# # RiePCA on a Riemannian manifold
 #
 # This file is both an importable Python module and a cell-by-cell explanation
-# of the construction. Editors that understand ``# %% [markdown]`` markers
-# can display these comments as Markdown cells.
+# of the construction. 
 #
 # The central idea is to turn each observation into a vector field sampled at
 # selected reference points. We center those fields, define their inner products
@@ -11,7 +10,7 @@
 # PCA in the Hilbert space of vector fields.
 
 # %%
-""" Readable, self-contained RiePCA for data on a Riemannian manifold.
+""" A self-contained RiePCA package for data on a Riemannian manifold.
 
 The code is intended for paper notebooks.  It requires only NumPy, SciPy,
 and a Geomstats-style manifold object ``space`` with ``space.metric``.
@@ -92,12 +91,12 @@ class RiePCAResult:
 # * ``mu[i]`` is the probability of observation $y_i$ and is normalized to
 #   sum to one.
 # * ``reference_volumes[a]`` weights the field inner product at reference
-#   $x_a$. For now, the default is one at every reference, giving counting
+#   $x_a$. For now, the default is one at every reference, giving a counting
 #   measure on the finite reference set.
 
 # %%
 def _measure(mu, n):
-    """Return ``n`` nonnegative observation probabilities that sum to one."""
+    """ Return ``n`` nonnegative observation probabilities that sum to one."""
     if mu is None:
         return np.full(n, 1.0 / n)
     mu = np.asarray(mu, dtype=float).reshape(-1)
@@ -131,7 +130,7 @@ def _reference_volumes(reference_volumes, n_references):
 # %% [markdown]
 # ## 3. Manifold information supplied by Geomstats
 #
-# The readable helper asks only for a manifold object ``space`` with a metric.
+# The helper asks only for a manifold object ``space`` with a metric.
 # It uses three metric operations:
 #
 # $$d(x,y)^2,\qquad \operatorname{Log}_x(y),\qquad
@@ -142,7 +141,7 @@ def _reference_volumes(reference_volumes, n_references):
 
 # %%
 def _validate_points(data_points, reference_points, space):
-    """Validate point-array shapes and return the manifold metric."""
+    """ Validate point-array shapes and return the manifold metric."""
     points = np.asarray(data_points, dtype=float)
     references = np.asarray(reference_points, dtype=float)
     if points.ndim < 2 or points.shape[0] < 2:
@@ -164,7 +163,7 @@ def _validate_points(data_points, reference_points, space):
 
 
 def _stacked(batched_call, single_call, items, expected_rows):
-    """Evaluate a metric on a batch, falling back to a loop if unsupported.
+    """ Evaluate a metric on a batch, falling back to a loop if unsupported.
 
     Geomstats metrics broadcast one base point against a stack of points, which
     turns O(n r) or O(n^2 r) Python-level metric calls into O(r) of them. Not
