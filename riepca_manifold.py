@@ -793,7 +793,7 @@ def sphere_heat_kernel_gradient_fields(
 
 
 # %% [markdown]
-# ## 10. Typical notebook use
+# ## 10. An example
 #
 # The standalone file accepts the Geomstats manifold itself; no package
 # wrapper is needed. For example, on the two-sphere:
