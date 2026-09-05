@@ -321,17 +321,19 @@ def geodesic_gaussian_gradient_fields(
 # %% [markdown]
 # ## 5. Inner product between sampled vector fields
 #
-# At a fixed reference $x_a$, both $F_i(x_a)$ and $F_j(x_a)$ belong to the
+# At each reference $x_a$, both $F_i(x_a)$ and $F_j(x_a)$ belong to the
 # same tangent space $T_{x_a}\mathcal M$, so Geomstats can evaluate
 # $g_{x_a}(F_i(x_a),F_j(x_a))$.
 #
-# We never compare tangent vectors based at different references. Instead, we
+# We never compare tangent vectors at different reference points. Instead, we
 # add the scalar pointwise inner products:
 #
 # $$G_{ij}=\langle F_i,F_j\rangle_R
 # =\sum_a\omega_a g_{x_a}(F_i(x_a),F_j(x_a)).$$
 #
 # This is why the construction does not require parallel transport.
+#
+# $G$ is the Gram matrix of the bilinear form corresponding to the covariance tensor.
 
 # %%
 def field_inner_product_gram(
@@ -340,7 +342,7 @@ def field_inner_product_gram(
     space,
     reference_volumes=None,
 ):
-    r""" Return the Gram matrix of sampled fields in the direct-sum metric.
+    r""" Return the Gram matrix of sampled fields.
 
     If ``fields[i, a]`` belongs to ``T_{x_a} M``, the returned matrix is
 
@@ -348,8 +350,6 @@ def field_inner_product_gram(
 
         G_{ij} = \sum_a \omega_a
         g_{x_a}(\mathrm{fields}_{i,a},\mathrm{fields}_{j,a}).
-
-    No tangent vectors based at different reference points are compared.
     """
     fields = np.asarray(fields, dtype=float)
     references = np.asarray(reference_points, dtype=float)
@@ -400,7 +400,7 @@ def field_inner_product_gram(
 
 # %%
 def weighted_dual_gram(field_gram, mu):
-    r"""Return ``Gamma = D_sqrt(mu) G D_sqrt(mu)``.
+    r""" Return ``Gamma = D_sqrt(mu) G D_sqrt(mu)``.
 
     ``Gamma`` acts on observation coefficients.  Its nonzero eigenvalues are
     those of the covariance operator on the sampled field space.
@@ -453,7 +453,7 @@ def riepca_manifold(
     eig_rtol=1e-10,
     eig_atol=0.0,
 ):
-    r"""Run centered RiePCA on one manifold at one time.
+    r"""Run centered RiePCA on one manifold at a time.
 
     By default, fields are produced by
     :func:`geodesic_gaussian_gradient_fields`.  To use an exact heat-kernel
@@ -639,7 +639,7 @@ def riepca_manifold(
 
 # %%
 def check_riepca(result, space, rtol=1e-8, atol=1e-8):
-    """Verify the defining PCA identities in scale-free form.
+    """ Verify the defining PCA identities in scale-free form.
 
     ``atol`` applies to the dimensionless identities and ``rtol`` to the one
     comparison that carries physical scale, the total variance. Both are
@@ -721,20 +721,20 @@ def check_riepca(result, space, rtol=1e-8, atol=1e-8):
 # %% [markdown]
 # ## 9. An exact heat-kernel field, on the two-sphere
 #
-# The default field is a geodesic-Gaussian *model*. On $S^2$ the true heat
+# The default field is a geodesic-Gaussian *model*. On $S^2$, the true heat
 # kernel is known in closed form as a Legendre series,
 #
 # $$k_t(x,y)=\sum_{l\ge0}e^{-l(l+1)t}\frac{2l+1}{4\pi}P_l(u),
 # \qquad u=\langle x,y\rangle,$$
 #
-# so the model can be replaced by the exact gradient and the two compared.
+# so the model can be replaced by the exact gradient and the two can be compared.
 # Since $k_t$ depends on $x$ only through $u$, and the gradient of $u$ on the
 # sphere is the tangential projection $y-ux$,
 #
 # $$\nabla_xk_t(x,y)=\Big(\sum_{l\ge1}e^{-l(l+1)t}\frac{2l+1}{4\pi}
 # P_l'(u)\Big)(y-ux),\qquad P_l'=C_{l-1}^{(3/2)},$$
 #
-# the Gegenbauer form of $P_l'$ being used because the recurrence for the
+# The Gegenbauer form of $P_l'$ is used because the recurrence for the
 # Legendre derivative is unstable near $u=\pm1$.
 #
 # Pass this as ``field_builder`` to check how far the geodesic-Gaussian model
@@ -750,7 +750,7 @@ def sphere_heat_kernel_gradient_fields(
     *,
     series_tol=1e-14,
 ):
-    r"""Exact heat-kernel gradient fields on the unit two-sphere.
+    r""" Exact heat-kernel gradient fields on the unit two-sphere.
 
     Drop-in ``field_builder`` for :func:`riepca_manifold`.  Unlike the default
     geodesic Gaussian, this is the true ``grad_x k_t(x, y)`` -- but only for
