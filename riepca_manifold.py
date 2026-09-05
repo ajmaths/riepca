@@ -25,7 +25,7 @@ Conventions
 
       <U, V>_R = sum_a omega[a] g_{x_a}(U_a, V_a).
 
-  The default ``omega[a] = 1`` is counting measure on the reference set.
+  The default ``omega[a] = 1`` is the counting measure on the reference set.
 * The default field is the gradient of a geodesic Gaussian.  It is the exact
   Euclidean heat-kernel gradient, but only a short-time heat-kernel model on a
   general curved manifold.  A custom exact field builder may be supplied.
