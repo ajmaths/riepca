@@ -133,8 +133,7 @@ def _reference_volumes(reference_volumes, n_references):
 # The helper asks only for a manifold object ``space`` with a metric.
 # It uses three metric operations:
 #
-# $$d(x,y)^2,\qquad \operatorname{Log}_x(y),\qquad
-# g_x(u,v).$$
+# $$d(x,y)^2,\qquad \operatorname{Log}_x(y),\qquad, g_x(u,v).$$
 #
 # In Geomstats these are ``metric.squared_dist``, ``metric.log``, and
 # ``metric.inner_product``.
@@ -166,7 +165,7 @@ def _stacked(batched_call, single_call, items, expected_rows):
     """ Evaluate a metric on a batch, falling back to a loop if unsupported.
 
     Geomstats metrics broadcast one base point against a stack of points, which
-    turns O(n r) or O(n^2 r) Python-level metric calls into O(r) of them. Not
+    turns O(nr) or O(n^2r) Python-level metric calls into O(r) of them. Not
     every backend does, so a batched call whose shape is wrong is discarded and
     the readable per-item loop is used instead. The two paths are numerically
     identical; only the call count differs.
@@ -184,9 +183,9 @@ def _stacked(batched_call, single_call, items, expected_rows):
 
 
 def _count_cut_locus_pairs(metric, base_point, distance_squared, logs, rtol=1e-6):
-    """Count observations that reach the cut locus of one reference point.
+    """ Count observations that reach the cut locus of one reference point.
 
-    Beyond the injectivity radius the logarithm map is not uniquely defined,
+    Beyond the injectivity radius, the logarithm map is not uniquely defined,
     and backends do not agree on what to return: Geomstats hands back an
     exactly zero tangent vector at the antipode of a sphere, so the field
     silently vanishes instead of raising. Two independent detectors are used,
@@ -213,19 +212,20 @@ def _count_cut_locus_pairs(metric, base_point, distance_squared, logs, rtol=1e-6
 
 
 # %% [markdown]
-# ## 4. Constructing an observation field
+# ## 4. Constructing a gradient vector field for each observation
 #
 # For each observation $y_i$ and each reference point $x_a$, the default field
 # is
 #
-# $$F_i(x_a)=\frac{1}{2t}(4\pi t)^{-q/2}
-# \exp\!\left(-\frac{d(x_a,y_i)^2}{4t}\right)
+# $$F_i(x_a)=\frac{1}{2t}(4\pi t)^{-q/2}\exp\!\left(-\frac{d(x_a,y_i)^2}{4t}\right)
 # \operatorname{Log}_{x_a}(y_i).$$
 #
 # This formula is the Euclidean heat-kernel gradient when the manifold is
-# Euclidean. On a curved manifold it is a geodesic-Gaussian, or short-time
-# heat-kernel model. Calling it a geodesic Gaussian prevents us from claiming
-# that it is the exact heat kernel on an arbitrary manifold.
+# Euclidean. On a curved manifold, it is a geodesic Gaussian (which is a heat-kernel 
+# proxy on the manifold). Calling it a geodesic Gaussian prevents us from claiming
+# that it is the exact heat kernel on an arbitrary manifold. 
+# Data/reference pairs at the cut locus should be avoided because the logarithm map 
+# is not uniquely defined there.
 
 # %%
 def geodesic_gaussian_gradient_fields(
@@ -236,21 +236,10 @@ def geodesic_gaussian_gradient_fields(
     *,
     manifold_dimension=None,
 ):
-    r"""Construct the default short-time geodesic-Gaussian gradient fields.
+    r""" Construct the default short-time geodesic-Gaussian gradient fields.
 
-    For observation ``y`` and reference ``x``, this returns
-
-    .. math::
-
-        F_y(x) = \frac{1}{2t}(4\pi t)^{-q/2}
-        \exp\!\left[-\frac{d(x,y)^2}{4t}\right]\operatorname{Log}_x(y).
-
-    This is the exact heat-kernel gradient in Euclidean space.  On a general
-    curved manifold it is a geodesic-Gaussian / short-time model, not the
-    exact heat-kernel gradient.  Data/reference pairs at the cut locus should
-    be avoided because the logarithm map is not uniquely defined there.
-
-    Returns an array with shape ``(n_observations, n_references, *tangent_shape)``.
+    For observation ``y`` and reference ``x``, this returns an array with shape 
+    ``(n_observations, n_references, *tangent_shape)``.
     """
     points, references, metric = _validate_points(
         data_points, reference_points, space
@@ -351,7 +340,7 @@ def field_inner_product_gram(
     space,
     reference_volumes=None,
 ):
-    r"""Return the Gram matrix of sampled fields in the direct-sum metric.
+    r""" Return the Gram matrix of sampled fields in the direct-sum metric.
 
     If ``fields[i, a]`` belongs to ``T_{x_a} M``, the returned matrix is
 
