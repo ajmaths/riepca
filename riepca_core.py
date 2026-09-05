@@ -22,18 +22,18 @@ living in the direct sum H_R = T_{x_1}M (+) ... (+) T_{x_r}M with
 
     <U,V>_R = sum_a omega_a g_{x_a}(U_a, V_a),        omega_a = 1 by default.
 
-After centring with the observation weights mu,
+After centering with the observation weights mu,
 
     Gamma_ij = sqrt(mu_i mu_j) <f_i - fbar, f_j - fbar>_R
     alpha_k(y_i) = sum_a omega_a g_{x_a}(f_i(x_a) - fbar(x_a), E_k(x_a))
 
-No Frechet mean and no chart is used anywhere: only Log and d at the references.
+No Fréchet mean, and no chart is used anywhere: only Log and d at the references.
 
 DEGENERATE BLOCKS -- why `block_magnitude` exists
 
 When two eigenvalues are nearly equal (a circle produces a degenerate PAIR),
 the individual axes inside that block are arbitrary: any rotation of the block
-diagonalises the covariance just as well. Individual PC scores are therefore
+diagonalizes the covariance just as well. Individual PC scores are therefore
 NOT reproducible, but the norm of the projection onto the block is:
 
     m_B(y) = sqrt( sum_{k in B} alpha_k(y)^2 )
