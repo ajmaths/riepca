@@ -6,11 +6,12 @@
 # can display these comments as Markdown cells.
 #
 # The central idea is to turn each observation into a vector field sampled at
-# fixed reference points. We center those fields, define their inner products
-# with the Riemannian metric, and then apply PCA in that field space.
+# selected reference points. We center those fields, define their inner products
+# with the Riemannian metric, construct the covariance operator, and then apply 
+# PCA in the Hilbert space of vector fields.
 
 # %%
-"""Readable, self-contained RiePCA for data on a Riemannian manifold.
+""" Readable, self-contained RiePCA for data on a Riemannian manifold.
 
 The code is intended for paper notebooks.  It requires only NumPy, SciPy,
 and a Geomstats-style manifold object ``space`` with ``space.metric``.
@@ -19,13 +20,15 @@ Conventions
 -----------
 * ``data_points[i]`` is an observation ``y_i`` with probability ``mu[i]``.
 * ``reference_points[a]`` is a point ``x_a`` where every field is sampled.
-* At a fixed reference, all field values lie in the same tangent space and
-  may therefore be averaged and compared with the Riemannian metric.
-* Different reference tangent spaces are combined with the direct-sum metric
+* At a selected reference point, all field values lie in the same tangent space 
+and may therefore be averaged and compared with the Riemannian metric.
+* Let (M, g) be a Riemannian manifold of bounded geometry. The inner product of 
+two vector fields on M is defined by
 
-      <U, V>_R = sum_a omega[a] g_{x_a}(U_a, V_a).
+      <U, V>_R = sum_a omega[a] g_{x_a}(U_a, V_a),
 
-  The default ``omega[a] = 1`` is the counting measure on the reference set.
+  where U_a := U(a) and V_a := V(a). The default volume measure is ``omega[a] = 1``, 
+  which is the counting measure on the reference set.
 * The default field is the gradient of a geodesic Gaussian.  It is the exact
   Euclidean heat-kernel gradient, but only a short-time heat-kernel model on a
   general curved manifold.  A custom exact field builder may be supplied.
