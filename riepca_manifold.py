@@ -27,7 +27,7 @@ two vector fields on M is defined by
 
       <U, V>_R = sum_a omega[a] g_{x_a}(U_a, V_a),
 
-  where U_a := U(a) and V_a := V(a). The default volume measure is ``omega[a] = 1``, 
+  where U_a := U(x_a) and V_a := V(x_a). The default volume measure is ``omega[a] = 1``, 
   which is the counting measure on the reference set.
 * The default field is the gradient of a geodesic Gaussian.  It is the exact
   Euclidean heat-kernel gradient, but only a short-time heat-kernel model on a
