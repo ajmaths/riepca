@@ -118,7 +118,7 @@ def _reference_volumes(reference_volumes, n_references):
     if (
         volumes.shape != (n_references,)
         or not np.all(np.isfinite(volumes))
-        or np.any(volumes < 0)
+        or np.any(volumes <= 0)
         or volumes.sum() <= 0
     ):
         raise ValueError(
