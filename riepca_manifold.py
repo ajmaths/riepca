@@ -96,7 +96,7 @@ class RiePCAResult:
 
 # %%
 def _measure(mu, n):
-    """ Return ``n`` nonnegative observation probabilities that sum to one."""
+    """Return ``n`` nonnegative observation probabilities that sum to one."""
     if mu is None:
         return np.full(n, 1.0 / n)
     mu = np.asarray(mu, dtype=float).reshape(-1)
@@ -133,14 +133,14 @@ def _reference_volumes(reference_volumes, n_references):
 # The helper asks only for a manifold object ``space`` with a metric.
 # It uses three metric operations:
 #
-# $$d(x,y)^2,\qquad \operatorname{Log}_x(y),\qquad, g_x(u,v).$$
+# $$d(x,y)^2,\qquad \operatorname{Log}_x(y),\qquad g_x(u,v).$$
 #
 # In Geomstats these are ``metric.squared_dist``, ``metric.log``, and
 # ``metric.inner_product``.
 
 # %%
 def _validate_points(data_points, reference_points, space):
-    """ Validate point-array shapes and return the manifold metric."""
+    """Validate point-array shapes and return the manifold metric."""
     points = np.asarray(data_points, dtype=float)
     references = np.asarray(reference_points, dtype=float)
     if points.ndim < 2 or points.shape[0] < 2:
@@ -162,7 +162,7 @@ def _validate_points(data_points, reference_points, space):
 
 
 def _stacked(batched_call, single_call, items, expected_rows):
-    """ Evaluate a metric on a batch, falling back to a loop if unsupported.
+    """Evaluate a metric on a batch, falling back to a loop if unsupported.
 
     Geomstats metrics broadcast one base point against a stack of points, which
     turns O(nr) or O(n^2r) Python-level metric calls into O(r) of them. Not
@@ -183,7 +183,7 @@ def _stacked(batched_call, single_call, items, expected_rows):
 
 
 def _count_cut_locus_pairs(metric, base_point, distance_squared, logs, rtol=1e-6):
-    """ Count observations that reach the cut locus of one reference point.
+    """Count observations that reach the cut locus of one reference point.
 
     Beyond the injectivity radius, the logarithm map is not uniquely defined,
     and backends do not agree on what to return: Geomstats hands back an
@@ -236,7 +236,7 @@ def geodesic_gaussian_gradient_fields(
     *,
     manifold_dimension=None,
 ):
-    r""" Construct the default short-time geodesic-Gaussian gradient fields.
+    r"""Construct the default short-time geodesic-Gaussian gradient fields.
 
     For observation ``y`` and reference ``x``, this returns an array with shape 
     ``(n_observations, n_references, *tangent_shape)``.
@@ -342,7 +342,7 @@ def field_inner_product_gram(
     space,
     reference_volumes=None,
 ):
-    r""" Return the Gram matrix of sampled fields.
+    r"""Return the Gram matrix of sampled fields.
 
     If ``fields[i, a]`` belongs to ``T_{x_a} M``, the returned matrix is
 
@@ -400,7 +400,7 @@ def field_inner_product_gram(
 
 # %%
 def weighted_dual_gram(field_gram, mu):
-    r""" Return ``Gamma = D_sqrt(mu) G D_sqrt(mu)``.
+    r"""Return ``Gamma = D_sqrt(mu) G D_sqrt(mu)``.
 
     ``Gamma`` acts on observation coefficients.  Its nonzero eigenvalues are
     those of the covariance operator on the sampled field space.
@@ -639,7 +639,7 @@ def riepca_manifold(
 
 # %%
 def check_riepca(result, space, rtol=1e-8, atol=1e-8):
-    """ Verify the defining PCA identities in scale-free form.
+    """Verify the defining PCA identities in scale-free form.
 
     ``atol`` applies to the dimensionless identities and ``rtol`` to the one
     comparison that carries physical scale, the total variance. Both are
@@ -727,7 +727,7 @@ def check_riepca(result, space, rtol=1e-8, atol=1e-8):
 # $$k_t(x,y)=\sum_{l\ge0}e^{-l(l+1)t}\frac{2l+1}{4\pi}P_l(u),
 # \qquad u=\langle x,y\rangle,$$
 #
-# So, for this dataset, we can use the exact gradient.
+# Thus, for the dataset on $S^2$, we can use the exact gradient.
 # Since $k_t$ depends on $x$ only through $u$, and the gradient of $u$ on the
 # sphere is the tangential projection $y-ux$,
 #
@@ -750,7 +750,7 @@ def sphere_heat_kernel_gradient_fields(
     *,
     series_tol=1e-14,
 ):
-    r""" Exact heat-kernel gradient fields on the unit two-sphere.
+    r"""Exact heat-kernel gradient fields on the unit two-sphere.
 
     Drop-in ``field_builder`` for :func:`riepca_manifold`.  Unlike the default
     geodesic Gaussian, this is the true ``grad_x k_t(x, y)`` -- but only for
