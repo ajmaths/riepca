@@ -4,10 +4,12 @@
 # This file is both an importable Python module and a cell-by-cell explanation
 # of the construction. 
 #
+# Let (M, g) be a Riemannian manifold and $x_1, \dots, x_r$ be reference points.
+
 # The central idea is to turn each observation into a vector field sampled at
 # selected reference points. We center those fields, define their inner products
 # with the Riemannian metric, construct the covariance operator, and then apply 
-# PCA in the Hilbert space of vector fields.
+# PCA in on the finite-dimensional Hilbert space $\bigoplus_{a=1}^rT_{x_a} M$.
 
 # %%
 """ A self-contained RiePCA package for data on a Riemannian manifold.
@@ -28,8 +30,8 @@ two vector fields on M is defined by
 
   where U_a := U(x_a) and V_a := V(x_a). The default volume measure is ``omega[a] = 1``, 
   which is the counting measure on the reference set.
-* The default field is the gradient of a geodesic Gaussian.  It is the exact
-  Euclidean heat-kernel gradient, but only a short-time heat-kernel model on a
+* The default field is the gradient of a geodesic Gaussian. It is the exact
+  Euclidean heat-kernel gradient, but only a heat-kernel proxy on a
   general curved manifold.  A custom exact field builder may be supplied.
 * Covariance and projection are both centered with respect to ``mu``.
 * Components are ordered largest-first, so column/component 0 is PC1.
@@ -45,8 +47,8 @@ from scipy.linalg import eigh
 # %% [markdown]
 # ## 1. Output of the construction
 #
-# A principal component is not one tangent vector at one point. It is a
-# sampled vector field
+# A principal component computed by RiePCA is a vector field that assigns a 
+# tangent vector to each reference point.
 #
 # $$E_k=(E_k(x_1),\ldots,E_k(x_r)),\qquad E_k(x_a)\in T_{x_a}\mathcal M.$$
 #
@@ -236,7 +238,7 @@ def geodesic_gaussian_gradient_fields(
     *,
     manifold_dimension=None,
 ):
-    r"""Construct the default short-time geodesic-Gaussian gradient fields.
+    r"""Construct the default geodesic-Gaussian gradient fields.
 
     For observation ``y`` and reference ``x``, this returns an array with shape 
     ``(n_observations, n_references, *tangent_shape)``.
@@ -332,8 +334,6 @@ def geodesic_gaussian_gradient_fields(
 # =\sum_a\omega_a g_{x_a}(F_i(x_a),F_j(x_a)).$$
 #
 # This is why the construction does not require parallel transport.
-#
-# $G$ is the Gram matrix of the bilinear form corresponding to the covariance tensor.
 
 # %%
 def field_inner_product_gram(
