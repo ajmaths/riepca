@@ -727,7 +727,7 @@ def check_riepca(result, space, rtol=1e-8, atol=1e-8):
 # $$k_t(x,y)=\sum_{l\ge0}e^{-l(l+1)t}\frac{2l+1}{4\pi}P_l(u),
 # \qquad u=\langle x,y\rangle,$$
 #
-# so the model can be replaced by the exact gradient and the two can be compared.
+# So, for this dataset, we can use the exact gradient.
 # Since $k_t$ depends on $x$ only through $u$, and the gradient of $u$ on the
 # sphere is the tangential projection $y-ux$,
 #
@@ -796,7 +796,7 @@ def sphere_heat_kernel_gradient_fields(
 # ## 10. An example
 #
 # The standalone file accepts the Geomstats manifold itself; no package
-# wrapper is needed. For example, on the two-sphere:
+# wrapper is needed. For example, on the $2$-sphere:
 #
 # ```python
 # from geomstats.geometry.hypersphere import Hypersphere
@@ -805,7 +805,7 @@ def sphere_heat_kernel_gradient_fields(
 # sphere = Hypersphere(dim=2)
 # result = riepca_manifold(
 #     data_points=points,          # shape (n, 3), with unit-length rows
-#     reference_points=references,# shape (r, 3), with unit-length rows
+#     reference_points=references, # shape (r, 3), with unit-length rows
 #     space=sphere,
 #     t=0.1,
 #     mu=mu,
